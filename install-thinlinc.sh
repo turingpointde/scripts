@@ -55,6 +55,7 @@ $SUDO /opt/thinlinc/sbin/tl-setup -a /tmp/tl-setup.answers
 if [ -x "$(command -v tailscale)" ]; then
   tailscaleip="$(tailscale ip -4 | grep -ohE '^100\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+$')"
   if [[ -z $tailscaleip ]]; then
+    echo "tailscale is not connected"
   else
     echo "Setting tailscale hostnames"
     tshostname="$(tailscale status | grep -ohE "[[:space:]][[:alnum:]]+\..+\.ts\.net" | xargs)"
