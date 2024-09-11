@@ -52,13 +52,16 @@ echo "tlwebadm-password=$(openssl rand -hex 12)" >> /tmp/tl-setup.answers
 echo "Running thinlinc setup"
 $SUDO /opt/thinlinc/sbin/tl-setup -a /tmp/tl-setup.answers
 
-if command -v tailscale &> /dev/null
-then
-  echo "Setting tailscale hostnames"
-  tshostname="$(tailscale status | grep -ohE "[[:space:]][[:alnum:]]+\..+\.ts\.net" | xargs)"
-  $SUDO perl -pi -e "s/master_hostname=.*/master_hostname=$tshostname/g" /opt/thinlinc/etc/conf.d/vsmagent.hconf
-  $SUDO perl -pi -e "s/agent_hostname=.*/agent_hostname=$tshostname/g" /opt/thinlinc/etc/conf.d/vsmagent.hconf
-  $SUDO systemctl restart vsmagent
+if [ -x "$(command -v tailscale)" ]; then
+  tailscaleip="$(tailscale ip -4 | grep -ohE '^100\.[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+$')"
+  if [[ -z $tailscaleip ]]; then
+  else
+    echo "Setting tailscale hostnames"
+    tshostname="$(tailscale status | grep -ohE "[[:space:]][[:alnum:]]+\..+\.ts\.net" | xargs)"
+    $SUDO perl -pi -e "s/master_hostname=.*/master_hostname=$tshostname/g" /opt/thinlinc/etc/conf.d/vsmagent.hconf
+    $SUDO perl -pi -e "s/agent_hostname=.*/agent_hostname=$tshostname/g" /opt/thinlinc/etc/conf.d/vsmagent.hconf
+    $SUDO systemctl restart vsmagent
+  fi
 fi
 
 echo "Cleanup"
