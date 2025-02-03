@@ -45,6 +45,7 @@ migrate-conf=no
 install-required-libs=yes
 setup-nearest=no
 setup-thinlocal=no
+agent-hostname-choice=hostname
 END
 
 echo "tlwebadm-password=$(openssl rand -hex 12)" >> /tmp/tl-setup.answers
