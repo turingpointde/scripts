@@ -58,10 +58,10 @@ if [ -x "$(command -v tailscale)" ]; then
   if [ -z $tailscaleip ]; then
     echo "tailscale is not connected"
   else
-    echo "Setting tailscale hostnames"
+    echo "Setting tailscale hostnames to $tailscaleip"
     tshostname="$(tailscale status | grep -ohE "[[:space:]][[:alnum:]]+\..+\.ts\.net" | xargs)"
-    $SUDO perl -pi -e "s/master_hostname=.*/master_hostname=$tshostname/g" /opt/thinlinc/etc/conf.d/vsmagent.hconf
-    $SUDO perl -pi -e "s/agent_hostname=.*/agent_hostname=$tshostname/g" /opt/thinlinc/etc/conf.d/vsmagent.hconf
+    $SUDO perl -pi -e "s/master_hostname=.*/master_hostname=$tailscaleip/g" /opt/thinlinc/etc/conf.d/vsmagent.hconf
+    $SUDO perl -pi -e "s/agent_hostname=.*/agent_hostname=$tailscaleip/g" /opt/thinlinc/etc/conf.d/vsmagent.hconf
     $SUDO systemctl restart vsmagent
   fi
 fi
