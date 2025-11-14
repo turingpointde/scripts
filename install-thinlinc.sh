@@ -19,7 +19,7 @@ if [ "$CAN_ROOT" != "1" ]; then
   exit 1
 fi
 
-url=$(curl -fsSL https://www.cendio.com/thinlinc/download/ | grep -ohE "https://.*/tl-[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+-server.zip" | head -n1)
+url="https://www.cendio.com/downloads/server/$(curl -fsSL https://www.cendio.com/thinlinc/download/ | grep -ohE 'tl-[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+-' | head -n1)server.zip"
 
 echo "Downloading from $url"
 curl -fsLo /tmp/tl-setup.zip "$url"
